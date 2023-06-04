@@ -54,32 +54,38 @@ function CreateForm() {
     setUserData([...userdata, formstate]);
   };
 
+  const createFormTitle = (e) => {
+    e.stopPropagation();
+    dispatch(addFormtitle(titleValue));
+  };
+
+  const createInputs = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    dispatch(
+      addFormInput(
+        type === "radio" || type === "checkbox" || type === "select"
+          ? { label, type: type, Values: radioBtnValue }
+          : { label, type: type }
+      )
+    );
+    clear();
+  };
+
+  const randerInputs = () => {};
+
   return (
     <div>
       {console.log(formstate)}
       {console.log("userdata", userdata)}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          dispatch(
-            addFormInput(
-              type === "radio" || type === "checkbox" || type === "select"
-                ? { label, type: type, Values: radioBtnValue }
-                : { label, type: type }
-            )
-          );
-          clear();
-        }}
-      >
+      <form onSubmit={createInputs}>
         <h1>Create Your Form</h1>
         <label>Add Form Title :- </label>
         <input
           type="text"
           value={titleValue}
           placeholder="Add Form Title"
-          onBlur={() => {
-            dispatch(addFormtitle(titleValue));
-          }}
+          onBlur={createFormTitle}
           onChange={(e) => {
             e.stopPropagation();
             setTitleValue(e.target.value);
@@ -211,8 +217,11 @@ function CreateForm() {
                 <br />
                 <label>{label}</label>
                 <textarea
-                  rows="4"
-                  cols="50"
+                  style={{
+                    padding: " 20px",
+                    width: " 100%",
+                    resize: "vertical",
+                  }}
                   value={formstate.label}
                   name={label}
                   onChange={getformData}
@@ -263,6 +272,7 @@ function CreateForm() {
                   "& .MuiInputBase-root": {
                     color: "white",
                     borderBottom: "1px solid white",
+                    width: "400px",
                   },
                   "& .MuiFormLabel-root": {
                     color: "white",
@@ -271,7 +281,6 @@ function CreateForm() {
                     color: "white",
                   },
                 }}
-                // label={type === "date" || type === "file" ? "" : ` ${label}`}
                 variant="standard"
                 name={label}
                 type={type}
