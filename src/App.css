@@ -1,12 +1,18 @@
-.App {
-  text-align: center;
+body {
+  padding: 20px;
+  background-color: white;
+  font-family: roboto;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
-
+input[type="text"],
+[type="number"] {
+  height: 20px;
+  width: 200px;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -14,16 +20,22 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  /* background-color: #282c34; */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  /* color: white; */
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
 .App-link {
   color: #61dafb;
 }
@@ -35,4 +47,17 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+form {
+  width: 50vw;
+  padding: 26px 30px 80px 30px;
+  background: #282c34;
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 80px;
 }
