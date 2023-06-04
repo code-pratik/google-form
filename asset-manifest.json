@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/google-form/static/css/main.8434081b.css",
+    "main.js": "/google-form/static/js/main.16c47757.js",
+    "static/js/787.c699aaca.chunk.js": "/google-form/static/js/787.c699aaca.chunk.js",
+    "index.html": "/google-form/index.html",
+    "main.8434081b.css.map": "/google-form/static/css/main.8434081b.css.map",
+    "main.16c47757.js.map": "/google-form/static/js/main.16c47757.js.map",
+    "787.c699aaca.chunk.js.map": "/google-form/static/js/787.c699aaca.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8434081b.css",
+    "static/js/main.16c47757.js"
+  ]
+}
