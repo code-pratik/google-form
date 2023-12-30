@@ -1,8 +1,11 @@
 body {
-  padding: 20px;
-  background-color: white;
-  font-family: roboto;
-  font-size: 20px;
+  background-color: #8cce8f;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1rem;
+}
+* {
+  margin: 0;
+  padding: 0;
 }
 
 .App-logo {
@@ -71,19 +74,9 @@ input[type="number"] {
   align-items: center;
 }
 
-form {
-  padding: 26px 30px 80px 30px;
-  background: #282c34;
-  color: white;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  margin-top: 20px;
-  width: 400px;
-  border-radius: 4px;
+.forms {
+  width: 100%;
 }
-
 h1 {
   font-size: 24px;
   margin-bottom: 20px;
@@ -91,13 +84,23 @@ h1 {
 
 label {
   display: block;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 
 input[type="text"],
-textarea,
 select {
-  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+textarea {
+  padding: 8px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+.inputsform {
+  width: 41.5%;
   padding: 8px;
   box-sizing: border-box;
   margin-bottom: 10px;
@@ -106,23 +109,26 @@ select {
 input[type="submit"],
 input[type="button"] {
   background-color: #4caf50;
-  width: 100%;
+  width: 41.5%;
   color: white;
-  padding: 8px 16px;
+  padding: 13px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 input[type="submit"]:hover,
 input[type="button"]:hover {
+  width: 41.5%;
   background-color: #45a049;
 }
 
 input[type="radio"],
 input[type="checkbox"] {
   margin-right: 5px;
+  margin-top: 10px;
 }
 
 span {
@@ -140,4 +146,110 @@ span {
 
 .MuiFormLabel-root.Mui-focused {
   color: white;
+}
+
+.Nav {
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  gap: 10px;
+}
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.inputContainer {
+  border: 1px solid white;
+  min-width: 600px;
+  min-height: 100px;
+  overflow: hidden;
+  padding: 20px 20px;
+  border-radius: 10px;
+}
+
+.Link {
+  text-decoration: none;
+  color: black;
+  font-family: "Product Sans", Arial, sans-serif;
+}
+.FormContainer {
+  cursor: move;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  align-items: center;
+  background-color: #000000;
+  padding: 26px 30px 80px 30px;
+  color: white;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 90%;
+  border-radius: 10px;
+  gap: 70px;
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 850px) {
+  html {
+    font-size: 60%;
+  }
+}
+@media screen and (max-width: 650px) {
+  html {
+    font-size: 60%;
+  }
+}
+
+.firstDiv {
+  width: 80%;
+  height: 50vh;
+  margin: auto;
+  padding-top: 65px;
+}
+.head {
+  padding: 10px 0px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.FormsContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.logo-font {
+  font-size: 22px;
+  font-family: "Product Sans", Arial, sans-serif;
+  font-weight: 100;
+}
+
+/* .textarea.MuiInputBase-root {
+  color: "white";
+}
+.textarea.MuiFormLabel-root {
+  color: "white";
+}
+.textarea.MuiFormLabel-root.Mui-focused {
+  color: "white";
+} */
+
+.btn {
+  background: "black";
+  float: "right";
+  color: "white";
+  margin-right: "40px";
+  margin-top: "10px";
+}
+
+[data-rbd-draggable-id] {
+  left: auto !important;
+  top: auto !important;
 }

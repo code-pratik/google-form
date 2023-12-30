@@ -1,178 +1,236 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addFormInput, addFormtitle } from "../slices/formSlice";
+import { addFormId, addFormInput, addFormtitle } from "../slices/formSlice";
 import SelectInputType from "./selectInputType";
-import { TextField } from "@mui/material";
-
+import { Link } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
+import { Button } from "@mui/material";
+import RemoveIcon from "@mui/icons-material/Remove";
+import DynamicFormIcon from "@mui/icons-material/DynamicForm";
+import HomeIcon from "@mui/icons-material/Home";
+import { useForm } from "react-hook-form";
+import MAINFORM from "./mainForm";
+import NavBar from "./NavBar";
 function CreateForm() {
-  const [label, setLabel] = useState("");
-  const [titleValue, setTitleValue] = useState("");
-  const [radioBtnValue, setRadioBtnValue] = useState({});
-  const [addMore, SetAddMore] = useState(0);
-  const inputType = useSelector((state) => state.formData.formType);
-  const form = useSelector((state) => state.formData.formElements);
-  const title = useSelector((state) => state.formData.formTitle);
-  const [formstate, setFormState] = useState({ checkBoxData: [] });
-  const [userdata, setUserData] = useState([]);
-  const dispatch = useDispatch();
-  const { type } = inputType[0];
-  let arr = [];
-  for (let i = 0; i <= addMore; i++) {
-    arr = [...arr, `radioText` + i];
-  }
-  const clear = () => {
-    setLabel("");
-    SetAddMore(0);
-    setRadioBtnValue({});
-  };
+    const [label, setLabel] = useState("");
+    const [titleValue, setTitleValue] = useState("");
+    const [radioBtnValue, setRadioBtnValue] = useState({});
+    const [addMore, SetAddMore] = useState(0);
+    const inputType = useSelector((state) => state.formData.formType);
+    const title = useSelector((state) => state.formData.formTitle);
+    const id = useSelector((state) => state.formData.formId)
+    const dispatch = useDispatch();
+    const { type } = inputType[0];
 
-  const getformData = (e) => {
-    setFormState({ ...formstate, [e.target.name]: e.target.value });
-  };
-  const getCheckBoxData = (e) => {
-    e.stopPropagation();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
 
-    if (e.target.type === "radio") {
-      return setFormState({ ...formstate, [e.target.name]: e.target.value });
+    let arr = [];
+    for (let i = 0; i <= addMore; i++) {
+        arr = [...arr, `radioText` + i];
     }
-    if (!formstate.checkBoxData.includes(e.target.value)) {
-      return setFormState({
-        ...formstate,
-        checkBoxData: [...formstate.checkBoxData, e.target.value],
-      });
-    } else if (formstate.checkBoxData.includes(e.target.value)) {
-      const data = formstate.checkBoxData.indexOf(e.target.value);
-      const arr = [...formstate.checkBoxData];
-      arr.splice(data, 1);
-      setFormState({ ...formstate, checkBoxData: arr });
-      console.log(arr);
+
+    const clear = () => {
+        setLabel("");
+        SetAddMore(0);
+        setRadioBtnValue({});
+    };
+
+    const createFormTitle = (e) => {
+        e.stopPropagation();
+        const uid = id === "" ? Math.round(new Date().getDate() + Math.random() * 100000) : id
+        dispatch(addFormId(uid))
+        dispatch(addFormtitle(titleValue));
+    };
+
+    const createInputs = (e) => {
+        // e.stopPropagation();
+        // e.preventDefault();
+        const values = Object.values(radioBtnValue).map(val => val)
+        const id = Math.round(new Date().getDate() + Math.random() * 100000)
+        dispatch(
+            addFormInput(
+                type === "radio" || type === "checkbox" || type === "select"
+                    ? { id, label, type: type, values }
+                    : { id, label, type: type }
+            )
+        );
+        clear();
+    };
+    const onClickEmpty = () => {
+        dispatch(addFormId(""))
+        dispatch(addFormtitle(""))
+        dispatch(addFormInput({ flag: 1, data: [] }))
     }
-  };
 
-  const CreateUser = (e) => {
-    e.preventDefault();
-    setUserData([...userdata, formstate]);
-  };
+    return (
+        <div>
+            {console.log(id)}
+            {console.log(radioBtnValue, "")}
+            <NavBar onEmpty={onClickEmpty} />
+            {/* <div style={{ marginRight: "10px" }}>
+          <DynamicFormIcon
+            style={{
+              verticalAlign: "middle",
+              display: "inline-block",
+              marginRight: "5px"
+            }}
+          />
+          <Link to="/CreatedForm" className="Link">
+            Generated Form
+          </Link>
+        </div> */}
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    // height: "100px",
+                    marginTop: "40px"
+                }}
+            >
+                <h1>Generate Your Own Form</h1>
+            </div>
+            <div className="FormContainer">
+                <form className="forms" onSubmit={handleSubmit(createInputs)}>
+                    <h1>Create Your Form</h1>
+                    <label style={{ marginBottom: "20px" }}>Add Form Title :- </label>
+                    {console.log(titleValue)}
+                    <input
+                        type="text"
+                        className="inputsform"
+                        value={titleValue === "" ? title : titleValue}
+                        placeholder="Add Form Title"
+                        onBlur={createFormTitle}
+                        // {...register("title", {
+                        //   required: { value: true, message: "Required" },
+                        // })}
+                        onChange={(e) => {
+                            e.stopPropagation();
+                            setTitleValue(e.target.value);
+                        }}
+                    />
 
-  const createFormTitle = (e) => {
-    e.stopPropagation();
-    dispatch(addFormtitle(titleValue));
-  };
+                    <SelectInputType clear={clear} />
+                    <br />
+                    <input
+                        type="text"
+                        className="inputsform"
+                        placeholder="Add Label"
+                        value={label}
+                        name="label"
+                        {...register("label", {
+                            required: { value: true, message: "Required" },
+                        })}
+                        onChange={(e) => {
+                            e.stopPropagation();
+                            setLabel(e.target.value);
+                        }}
+                    />
+                    {label === "" ? (
+                        <p style={{ color: "red" }}>{errors.label?.message}</p>
+                    ) : (
+                        ""
+                    )}
 
-  const createInputs = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    dispatch(
-      addFormInput(
-        type === "radio" || type === "checkbox" || type === "select"
-          ? { label, type: type, Values: radioBtnValue }
-          : { label, type: type }
-      )
-    );
-    clear();
-  };
-
-  const randerInputs = () => {};
-
-  return (
-    <div>
-      {console.log(formstate)}
-      {console.log("userdata", userdata)}
-      <form onSubmit={createInputs}>
-        <h1>Create Your Form</h1>
-        <label>Add Form Title :- </label>
-        <input
-          type="text"
-          value={titleValue}
-          placeholder="Add Form Title"
-          onBlur={createFormTitle}
-          onChange={(e) => {
-            e.stopPropagation();
-            setTitleValue(e.target.value);
-          }}
-        />
-        <SelectInputType clear={clear} />
-        <br />
-        <input
-          type="text"
-          placeholder="Add Label"
-          value={label}
-          onChange={(e) => {
-            e.stopPropagation();
-            setLabel(e.target.value);
-          }}
-        />
-        <br />
-        <input
-          type={type}
-          disabled
-          style={{
-            display: `${
-              type === "radio" || type === "checkbox" || type === "select"
-                ? "none"
-                : "block"
-            }`,
-          }}
-        />
-        {type === "select" ? (
-          <>
-            <select disabled name="select">
-              <option>Select</option>
-            </select>
-            <br />
-          </>
-        ) : (
-          ""
-        )}
-        <br />
-        {type === "radio" || type === "checkbox" || type === "select"
-          ? arr.map((item, index) => (
-              <>
-                <label>
-                  {type === "checkbox" || type === "select" || type === "radio"
-                    ? "add  value"
-                    : ""}
-                </label>
-                {type === "select" ? (
-                  ""
-                ) : (
-                  <input
-                    type={type}
-                    disabled
-                    style={{
-                      display: `${
-                        type === "radio" || "checkbox" ? "inline-block" : "none"
-                      }`,
-                    }}
-                  />
-                )}
-
-                <input
-                  type="text"
-                  name={item}
-                  value={radioBtnValue.radioText}
-                  style={{
-                    display: `${
-                      type === "radio" || "checkbox" || "select"
-                        ? "inline-block"
-                        : "none"
-                    }`,
-                  }}
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    setRadioBtnValue({
-                      ...radioBtnValue,
-                      [e.target.name]: e.target.value,
-                    });
-                  }}
-                />
-                <br />
-              </>
-            ))
-          : ""}
-        {type === "radio" || type === "checkbox" || type === "select" ? (
-          <>
-            <input
+                    <br />
+                    <input
+                        type={type}
+                        className="inputsform"
+                        disabled
+                        style={{
+                            display: `${type === "radio" || type === "checkbox" || type === "select"
+                                ? "none"
+                                : "block"
+                                }`,
+                        }}
+                    />
+                    {type === "select" ? (
+                        <>
+                            <select disabled name="select">
+                                <option>Select</option>
+                            </select>
+                            <br />
+                        </>
+                    ) : (
+                        ""
+                    )}
+                    <br />
+                    {type === "radio" || type === "checkbox" || type === "select"
+                        ? arr.map((item, index) => (
+                            <>
+                                <label>
+                                    {type === "checkbox" ||
+                                        type === "select" ||
+                                        type === "radio"
+                                        ? "add  value"
+                                        : ""}
+                                </label>
+                                {type === "select" ? (
+                                    ""
+                                ) : (
+                                    <input
+                                        type={type}
+                                        disabled
+                                        style={{
+                                            display: `${type === "radio" || "checkbox"
+                                                ? "inline-block"
+                                                : "none"
+                                                }`,
+                                        }}
+                                    />
+                                )}
+                                <input
+                                    type="text"
+                                    name={item}
+                                    className="inputsform"
+                                    required
+                                    style={{
+                                        display: `${type === "radio" || "checkbox" || "select"
+                                            ? "inline-block"
+                                            : "none"
+                                            }`,
+                                    }}
+                                    onChange={(e) => {
+                                        e.stopPropagation();
+                                        setRadioBtnValue({
+                                            ...radioBtnValue,
+                                            [e.target.name]: e.target.value,
+                                        });
+                                    }}
+                                />
+                                <br />
+                            </>
+                        ))
+                        : ""}
+                    {type === "radio" || type === "checkbox" || type === "select" ? (
+                        <>
+                            <Button
+                                variant="contained"
+                                className="inputsform"
+                                type="button"
+                                endIcon={<AddIcon />}
+                                onClick={() => {
+                                    SetAddMore(addMore + 1);
+                                }}
+                                style={{
+                                    backgroundColor: "lightblue",
+                                    color: "black",
+                                    fontWeight: "600",
+                                }}
+                                sx={{ width: "41.5%" }}
+                            >
+                                {type === "radio"
+                                    ? "addMoreradio"
+                                    : type === "select"
+                                        ? "addMoreOptions"
+                                        : "addMoreCheckbox"}
+                            </Button>
+                            <br />
+                            {/* <input
               type="button"
               value={
                 type === "radio"
@@ -184,8 +242,29 @@ function CreateForm() {
               onClick={() => {
                 SetAddMore(addMore + 1);
               }}
-            />
-            <input
+            /> */}
+                            <Button
+                                variant="contained"
+                                type="button"
+                                endIcon={<RemoveIcon />}
+                                onClick={() => {
+                                    SetAddMore(addMore - 1);
+                                }}
+                                style={{
+                                    backgroundColor: "lightblue",
+                                    color: "black",
+                                    marginTop: "10px",
+                                    fontWeight: "600",
+                                }}
+                                sx={{ width: "41.5%" }}
+                            >
+                                {type === "radio"
+                                    ? "Removeradio"
+                                    : type === "select"
+                                        ? "RemoveOptions"
+                                        : "RemoveCheckbox"}
+                            </Button>
+                            {/* <input
               type="button"
               value={
                 type === "radio"
@@ -194,107 +273,34 @@ function CreateForm() {
                   ? "RemoveOptions➖"
                   : "RemoveCheckbox➖"
               }
-              onClick={() => {
-                SetAddMore(addMore - 1);
-              }}
-            />
-          </>
-        ) : (
-          ""
-        )}
-        <br />
-        <input type="submit" value="Add to Form➕" />
-      </form>
-      <form onSubmit={CreateUser}>
-        <h1>{title}</h1>
-        {form.map(({ label, type, Values }) =>
-          type === "radio" ||
-          type === "checkbox" ||
-          type === "textarea" ||
-          type === "select" ? (
-            type === "textarea" ? (
-              <>
-                <br />
-                <label>{label}</label>
-                <textarea
-                  style={{
-                    padding: " 20px",
-                    width: " 100%",
-                    resize: "vertical",
-                  }}
-                  value={formstate.label}
-                  name={label}
-                  onChange={getformData}
-                />
-                <br />
-              </>
-            ) : type === "select" ? (
-              <>
-                <br />
-                <label>{label}</label>
-                <select
-                  name={label}
-                  value={formstate.label}
-                  onChange={getformData}
-                >
-                  {Object.values(Values).map((value) => (
-                    <>
-                      <option value={value}>{value}</option>
-                    </>
-                  ))}
-                </select>
-              </>
-            ) : (
-              <>
-                <br />
-                <label>{label}</label>
-                {Object.values(Values).map((value) => (
-                  <>
-                    <input
-                      type={type}
-                      name={label}
-                      onChange={getCheckBoxData}
-                      value={value}
-                    />
-                    <span>{value}</span>
-                  </>
-                ))}
-              </>
-            )
-          ) : (
-            <>
-              <br />
-              <label>{label}</label>
-              <br />
-              <TextField
-                id="standard-basic"
-                sx={{
-                  "& .MuiInputBase-root": {
-                    color: "white",
-                    borderBottom: "1px solid white",
-                    width: "400px",
-                  },
-                  "& .MuiFormLabel-root": {
-                    color: "white",
-                  },
-                  "& .MuiFormLabel-root.Mui-focused": {
-                    color: "white",
-                  },
-                }}
-                variant="standard"
-                name={label}
-                type={type}
-                value={formstate.label}
-                onChange={getformData}
-              />
-            </>
-          )
-        )}
-        <br />
-        {form.length > 0 ? <input type="Submit" value="submit" /> : ""}
-      </form>
-    </div>
-  );
+            
+            /> */}
+                        </>
+                    ) : (
+                        ""
+                    )}
+                    <br />
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        endIcon={<AddIcon />}
+                        style={{
+                            backgroundColor: "lightblue",
+                            color: "black",
+                            marginTop: "10px",
+                            fontWeight: "600",
+                        }}
+                        sx={{ width: "41.5%" }}
+                    >
+                        Add to Form
+                    </Button>
+
+                </form>
+            </div>
+            <MAINFORM />
+        </div>
+    );
 }
 
-export default CreateForm;
+
+export default CreateForm

@@ -1,5 +1,6 @@
 import React from "react";
-import CreateForm from "./createForm";
+import CreateForm from "../components/CreateForm";
+
 
 function Main() {
   return (

@@ -17,8 +17,9 @@ function SelectInputType({ clear }) {
     <FormControl
       sx={{
         background: "white",
-        width: "100%",
+        width: "40%",
         marginBottom: "30px",
+        float: "right",
       }}
     >
       <Select
